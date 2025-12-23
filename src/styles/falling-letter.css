@@ -157,10 +157,26 @@
   padding: clamp(20px, 5vw, 30px);
   max-width: 320px;
   width: 85vw;
+  max-height: 70vh;
+  overflow-y: auto;
   box-shadow:
     0 15px 40px rgba(0, 0, 0, 0.25),
     inset 0 0 50px rgba(255, 250, 240, 0.5);
   position: relative;
+}
+
+.letter-paper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.letter-paper::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.letter-paper::-webkit-scrollbar-thumb {
+  background: rgba(196, 30, 58, 0.3);
+  border-radius: 3px;
 }
 
 .letter-paper::before {
