@@ -360,15 +360,26 @@ const SantaBody = ({ isWhipping }) => {
 
   useEffect(() => {
     if (isWhipping && rightArmRef.current) {
-      // Whip animation
-      gsap.to(rightArmRef.current.rotation, {
-        z: -0.8,
-        x: 0.3,
-        duration: 0.15,
-        yoyo: true,
-        repeat: 1,
-        ease: "power2.out"
-      });
+      // Whip animation - more dramatic!
+      gsap.timeline()
+        .to(rightArmRef.current.rotation, {
+          z: 0.5,
+          x: -0.5,
+          duration: 0.1,
+          ease: "power2.in"
+        })
+        .to(rightArmRef.current.rotation, {
+          z: -1.2,
+          x: 0.8,
+          duration: 0.15,
+          ease: "power4.out"
+        })
+        .to(rightArmRef.current.rotation, {
+          z: -0.25,
+          x: 0,
+          duration: 0.2,
+          ease: "elastic.out(1, 0.5)"
+        });
     }
   }, [isWhipping]);
 
@@ -449,41 +460,71 @@ const SantaBody = ({ isWhipping }) => {
   );
 };
 
-// Whip effect
+// Whip effect - more visible and dramatic
 const WhipEffect = ({ isWhipping }) => {
   const whipRef = useRef();
+  const trailRef = useRef();
 
   useEffect(() => {
     if (isWhipping && whipRef.current) {
       whipRef.current.visible = true;
-      gsap.fromTo(whipRef.current.scale,
-        { x: 0, y: 0, z: 0 },
-        { x: 1, y: 1, z: 1, duration: 0.1 }
-      );
-      gsap.fromTo(whipRef.current.rotation,
-        { z: 0.5 },
-        { z: -0.5, duration: 0.2, ease: "power2.out" }
-      );
+      if (trailRef.current) trailRef.current.visible = true;
+
+      // Whip crack animation
+      gsap.timeline()
+        .fromTo(whipRef.current.scale,
+          { x: 0, y: 0, z: 0 },
+          { x: 1.5, y: 1.5, z: 1.5, duration: 0.08, ease: "power2.out" }
+        )
+        .to(whipRef.current.rotation, {
+          z: -1.2,
+          y: 0.3,
+          duration: 0.12,
+          ease: "power4.out"
+        }, 0)
+        .to(whipRef.current.scale, {
+          x: 1, y: 1, z: 1,
+          duration: 0.15
+        });
+
+      // Trail effect
+      if (trailRef.current) {
+        gsap.fromTo(trailRef.current.material,
+          { opacity: 0.8 },
+          { opacity: 0, duration: 0.4 }
+        );
+      }
+
       setTimeout(() => {
         if (whipRef.current) whipRef.current.visible = false;
-      }, 300);
+        if (trailRef.current) trailRef.current.visible = false;
+      }, 400);
     }
   }, [isWhipping]);
 
   const whipCurve = useMemo(() => {
     return new THREE.CatmullRomCurve3([
-      new THREE.Vector3(0.5, -0.5, 0.5),
-      new THREE.Vector3(1, 0, 0),
-      new THREE.Vector3(1.5, 0.5, -1),
-      new THREE.Vector3(1, 0.3, -2),
+      new THREE.Vector3(0.6, -0.3, 0.8),
+      new THREE.Vector3(1.2, 0.2, 0),
+      new THREE.Vector3(1.8, 0.5, -1.2),
+      new THREE.Vector3(1.2, 0.2, -2.5),
+      new THREE.Vector3(0.5, -0.2, -3.2),
     ]);
   }, []);
 
   return (
-    <mesh ref={whipRef} visible={false}>
-      <tubeGeometry args={[whipCurve, 20, 0.02, 8, false]} />
-      <meshStandardMaterial color="#3d2314" />
-    </mesh>
+    <group>
+      {/* Main whip */}
+      <mesh ref={whipRef} visible={false}>
+        <tubeGeometry args={[whipCurve, 30, 0.035, 8, false]} />
+        <meshStandardMaterial color="#5d3a1a" roughness={0.6} />
+      </mesh>
+      {/* Whip trail/glow effect */}
+      <mesh ref={trailRef} visible={false}>
+        <tubeGeometry args={[whipCurve, 30, 0.08, 8, false]} />
+        <meshBasicMaterial color="#ffaa44" transparent opacity={0.5} />
+      </mesh>
+    </group>
   );
 };
 

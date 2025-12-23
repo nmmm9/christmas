@@ -74,8 +74,8 @@ function App() {
     whipCountRef.current += 1;
     setShowHint(false);
 
-    // After 2-3 whips, start running
-    if (whipCountRef.current >= 2 && !isRunning) {
+    // After 3 whips, start running
+    if (whipCountRef.current >= 3 && !isRunning) {
       setIsRunning(true);
 
       // Accelerate
