@@ -66,21 +66,21 @@ const FallingLetter = ({ isVisible, onComplete }) => {
   // Animate letter sliding out of envelope
   useEffect(() => {
     if (letterOpen && letterPaperRef.current && !showFullLetter) {
-      // Letter slides up out of envelope
+      // Letter slides up out of envelope - slow and gentle
       gsap.fromTo(letterPaperRef.current,
         {
-          y: 50,
+          y: 80,
           opacity: 0,
-          scale: 0.9,
-          rotationX: -30
+          scale: 0.85,
+          rotationX: -20
         },
         {
           y: 0,
           opacity: 1,
           scale: 1,
           rotationX: 0,
-          duration: 0.8,
-          ease: "back.out(1.2)",
+          duration: 1.8,
+          ease: "power2.out",
           onComplete: () => {
             setShowFullLetter(true);
           }
