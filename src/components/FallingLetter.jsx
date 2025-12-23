@@ -3,69 +3,117 @@ import gsap from 'gsap';
 import '../styles/falling-letter.css';
 
 const FallingLetter = ({ isVisible, onComplete }) => {
+  const containerRef = useRef();
   const envelopeRef = useRef();
   const letterRef = useRef();
   const letterPaperRef = useRef();
-  const [letterOpen, setLetterOpen] = useState(false);
+  const impactRef = useRef();
+  const textRef = useRef();
+
+  const [phase, setPhase] = useState('flying'); // flying -> impact -> confused -> ready -> open
   const [showFullLetter, setShowFullLetter] = useState(false);
 
   useEffect(() => {
     if (isVisible && envelopeRef.current) {
       // Reset state
-      setLetterOpen(false);
+      setPhase('flying');
       setShowFullLetter(false);
 
-      // Gentle floating down animation (like a feather)
-      gsap.fromTo(envelopeRef.current,
+      const tl = gsap.timeline();
+
+      // Phase 1: Letter flying from far away (small dot growing bigger)
+      tl.fromTo(envelopeRef.current,
         {
-          y: '-100vh',
-          rotation: -15,
+          scale: 0.05,
+          x: '30vw',
+          y: '-20vh',
+          rotation: 720,
           opacity: 0,
-          scale: 0.8
         },
         {
-          y: '0vh',
-          rotation: 0,
+          scale: 0.3,
+          x: '15vw',
+          y: '-10vh',
+          rotation: 360,
           opacity: 1,
-          scale: 1,
-          duration: 4,
-          ease: "power1.out",
-          onComplete: () => {
-            // Gentle settle wobble
-            gsap.to(envelopeRef.current, {
-              rotation: 3,
-              duration: 0.4,
+          duration: 0.8,
+          ease: "power2.in"
+        }
+      )
+      // Getting closer and bigger
+      .to(envelopeRef.current, {
+        scale: 0.7,
+        x: '5vw',
+        y: '-3vh',
+        rotation: 180,
+        duration: 0.4,
+        ease: "power2.in"
+      })
+      // IMPACT! - hits the screen
+      .to(envelopeRef.current, {
+        scale: 1.3,
+        x: 0,
+        y: 0,
+        rotation: 5,
+        duration: 0.15,
+        ease: "power4.in",
+        onComplete: () => {
+          setPhase('impact');
+          // Screen shake effect
+          if (containerRef.current) {
+            gsap.to(containerRef.current, {
+              x: -20,
+              duration: 0.05,
               yoyo: true,
-              repeat: 2,
-              ease: "sine.inOut"
+              repeat: 5,
+              ease: "none"
             });
           }
         }
-      );
-
-      // Swaying side-to-side motion (like falling through air)
-      gsap.to(envelopeRef.current, {
-        x: 40,
-        duration: 1.2,
-        yoyo: true,
-        repeat: 3,
-        ease: "sine.inOut"
-      });
-
-      // Additional gentle rotation during fall
-      gsap.to(envelopeRef.current, {
-        rotation: "+=10",
-        duration: 0.8,
-        yoyo: true,
-        repeat: 4,
-        ease: "sine.inOut"
+      })
+      // Bounce back slightly
+      .to(envelopeRef.current, {
+        scale: 1,
+        rotation: -3,
+        duration: 0.3,
+        ease: "elastic.out(1, 0.3)"
+      })
+      // Show "어...뭐지?" text
+      .to({}, {
+        duration: 0.3,
+        onComplete: () => setPhase('confused')
+      })
+      // After confusion, ready to open
+      .to({}, {
+        duration: 1.5,
+        onComplete: () => setPhase('ready')
       });
     }
   }, [isVisible]);
 
-  // Animate letter sliding out of envelope - more dynamic!
+  // Impact flash effect
   useEffect(() => {
-    if (letterOpen && letterPaperRef.current && !showFullLetter) {
+    if (phase === 'impact' && impactRef.current) {
+      gsap.fromTo(impactRef.current,
+        { opacity: 1, scale: 0.5 },
+        { opacity: 0, scale: 2, duration: 0.4, ease: "power2.out" }
+      );
+    }
+  }, [phase]);
+
+  // Confused text animation
+  useEffect(() => {
+    if (phase === 'confused' && textRef.current) {
+      gsap.fromTo(textRef.current,
+        { opacity: 0, y: 20, scale: 0.8 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.7)" }
+      );
+    }
+  }, [phase]);
+
+  // Animate letter sliding out of envelope
+  useEffect(() => {
+    if (phase === 'open' && letterPaperRef.current && !showFullLetter) {
       const tl = gsap.timeline({
         onComplete: () => setShowFullLetter(true)
       });
@@ -91,7 +139,6 @@ const FallingLetter = ({ isVisible, onComplete }) => {
           ease: "back.out(1.5)"
         }
       )
-      // Overshoot bounce
       .to(letterPaperRef.current, {
         y: 20,
         scale: 0.95,
@@ -101,7 +148,6 @@ const FallingLetter = ({ isVisible, onComplete }) => {
         duration: 0.3,
         ease: "power2.in"
       })
-      // Spring back up
       .to(letterPaperRef.current, {
         y: -15,
         scale: 1.08,
@@ -111,7 +157,6 @@ const FallingLetter = ({ isVisible, onComplete }) => {
         duration: 0.25,
         ease: "power2.out"
       })
-      // Settle with gentle wobble
       .to(letterPaperRef.current, {
         y: 0,
         scale: 1,
@@ -121,7 +166,6 @@ const FallingLetter = ({ isVisible, onComplete }) => {
         duration: 0.4,
         ease: "elastic.out(1, 0.5)"
       })
-      // Final subtle float
       .to(letterPaperRef.current, {
         y: -5,
         duration: 1.5,
@@ -130,12 +174,12 @@ const FallingLetter = ({ isVisible, onComplete }) => {
         repeat: -1
       });
     }
-  }, [letterOpen, showFullLetter]);
+  }, [phase, showFullLetter]);
 
-  const handleOpenLetter = () => {
-    if (!letterOpen) {
-      setLetterOpen(true);
-    } else if (showFullLetter) {
+  const handleClick = () => {
+    if (phase === 'ready') {
+      setPhase('open');
+    } else if (phase === 'open' && showFullLetter) {
       onComplete?.();
     }
   };
@@ -143,10 +187,13 @@ const FallingLetter = ({ isVisible, onComplete }) => {
   if (!isVisible) return null;
 
   return (
-    <div className="falling-letter-overlay" onClick={handleOpenLetter}>
-      <div className="falling-letter-container" ref={envelopeRef}>
-        {!letterOpen ? (
-          // Closed envelope
+    <div className="falling-letter-overlay" ref={containerRef} onClick={handleClick}>
+      {/* Impact flash effect */}
+      <div className="impact-flash" ref={impactRef}></div>
+
+      {/* Flying/Impact envelope */}
+      {phase !== 'open' && (
+        <div className="falling-letter-container flying-envelope" ref={envelopeRef}>
           <div className="envelope-closed">
             <div className="envelope-body">
               <div className="envelope-flap"></div>
@@ -155,18 +202,29 @@ const FallingLetter = ({ isVisible, onComplete }) => {
                 <img src={`${import.meta.env.BASE_URL}seal-avatar.png`} alt="" className="seal-avatar" />
               </div>
             </div>
-            <p className="tap-hint">탭해서 열기</p>
           </div>
-        ) : (
-          // Letter coming out of envelope
+        </div>
+      )}
+
+      {/* Confused text */}
+      {(phase === 'confused' || phase === 'ready') && (
+        <div className="confused-text" ref={textRef}>
+          <p className="confused-main">어...뭐지?</p>
+          {phase === 'ready' && (
+            <p className="tap-to-open">탭해서 열어보기</p>
+          )}
+        </div>
+      )}
+
+      {/* Opened letter */}
+      {phase === 'open' && (
+        <div className="falling-letter-container">
           <div className="letter-opening" ref={letterRef}>
-            {/* Envelope behind (opened) */}
             <div className="envelope-opened">
               <div className="envelope-back"></div>
               <div className="envelope-flap-open"></div>
             </div>
 
-            {/* Letter paper sliding out */}
             <div className="letter-paper-wrapper" ref={letterPaperRef}>
               <div className="letter-paper">
                 <div className="letter-header">
@@ -202,11 +260,11 @@ const FallingLetter = ({ isVisible, onComplete }) => {
 
             <p className="close-hint">탭해서 닫기</p>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* Subtle sparkle effects */}
-      {isVisible && (
+      {/* Sparkles */}
+      {phase === 'open' && (
         <div className="sparkles">
           {[...Array(8)].map((_, i) => (
             <div

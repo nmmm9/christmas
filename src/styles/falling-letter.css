@@ -243,6 +243,62 @@
   font-size: 0.85rem;
 }
 
+/* Flying envelope animation */
+.flying-envelope {
+  position: absolute;
+}
+
+/* Impact flash effect */
+.impact-flash {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 999;
+}
+
+/* Confused text */
+.confused-text {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 100;
+}
+
+.confused-main {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: clamp(2rem, 8vw, 3rem);
+  font-weight: 700;
+  color: #fff;
+  text-shadow:
+    0 0 20px rgba(255, 255, 255, 0.8),
+    0 4px 10px rgba(0, 0, 0, 0.5);
+  margin: 0;
+  animation: confusedBounce 0.5s ease-out;
+}
+
+@keyframes confusedBounce {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.tap-to-open {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: clamp(1rem, 4vw, 1.3rem);
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 15px;
+  animation: tapPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes tapPulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
 /* Sparkles */
 .sparkles {
   position: fixed;
