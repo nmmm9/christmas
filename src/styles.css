@@ -1,0 +1,272 @@
+/* Envelope Styles - Fully Responsive Version */
+.envelope-container {
+    position: relative;
+    width: var(--envelope-width);
+    height: var(--envelope-height);
+    perspective: 1200px;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    touch-action: manipulation; /* Better touch handling */
+}
+
+/* Floating animation when idle */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.envelope-container:not(.open) {
+    animation: float 3s ease-in-out infinite;
+}
+
+.envelope-container.open {
+    transform: translateY(var(--envelope-open-translate)) scale(1.05);
+    cursor: default;
+}
+
+.envelope {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-envelope-dark);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    transform-style: preserve-3d;
+    border-radius: 4px;
+}
+
+/* The flap - responsive using percentage-based calculations */
+.flap-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: calc(var(--envelope-width) / 2) solid transparent;
+    border-right: calc(var(--envelope-width) / 2) solid transparent;
+    border-top: calc(var(--envelope-height) * 0.545) solid var(--color-flap);
+    transform-origin: top;
+    transition: transform 0.6s ease-in-out, z-index 0.2s 0.2s;
+    z-index: 5;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+}
+
+.envelope-container.open .flap-top {
+    transform: rotateX(180deg);
+    z-index: 1;
+}
+
+/* The Wax Seal - responsive */
+.flap-top::after {
+    content: "Merry";
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(10px, 3vw, 14px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5c410a;
+    position: absolute;
+    bottom: calc(var(--envelope-height) * 0.36);
+    left: calc(var(--envelope-width) * -0.0625);
+    width: clamp(30px, 10vw, 40px);
+    height: clamp(30px, 10vw, 40px);
+    background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 2px 2px rgba(255, 255, 255, 0.4);
+    border: 2px solid #b8860b;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.envelope-container.open .flap-top::after {
+    opacity: 0;
+}
+
+/* Pocket - responsive */
+.pocket {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-bottom: var(--envelope-height) solid var(--color-envelope);
+    border-left: calc(var(--envelope-width) / 2) solid transparent;
+    border-right: calc(var(--envelope-width) / 2) solid transparent;
+    z-index: 4;
+}
+
+/* The Card - responsive */
+.card {
+    position: absolute;
+    top: clamp(6px, 2vw, 10px);
+    left: clamp(6px, 2vw, 10px);
+    right: clamp(6px, 2vw, 10px);
+    bottom: clamp(6px, 2vw, 10px);
+    background-color: var(--color-card-bg);
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+    color: var(--color-text);
+    border-radius: 4px;
+    z-index: 2;
+    transition: transform 0.8s 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: clamp(12px, 4vw, 24px);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.envelope-container.open .card {
+    transform: translateY(calc(var(--card-slide-distance) * -1));
+    z-index: 11;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+/* Card Decorative Border */
+.card::before {
+    content: "";
+    position: absolute;
+    top: clamp(4px, 1.5vw, 8px);
+    left: clamp(4px, 1.5vw, 8px);
+    right: clamp(4px, 1.5vw, 8px);
+    bottom: clamp(4px, 1.5vw, 8px);
+    border: 1px solid #d4c5a3;
+    border-radius: 2px;
+    pointer-events: none;
+}
+
+.card-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(4px, 1.5vw, 8px);
+}
+
+.card-content h2 {
+    font-family: 'Great Vibes', cursive;
+    color: #8e1d1d;
+    margin: 0;
+    font-size: clamp(1.5rem, 6vw, 2.4rem);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+}
+
+.card-content p {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: clamp(0.75rem, 3vw, 1.1rem);
+    line-height: 1.5;
+    margin: 0;
+    color: #4a3b32;
+    word-break: keep-all; /* Better Korean text wrapping */
+}
+
+.photo-placeholder {
+    width: 100%;
+    height: clamp(80px, 25vw, 140px);
+    background-color: #f0ebe0;
+    border-radius: 2px;
+    border: clamp(2px, 0.8vw, 4px) solid #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transform: rotate(-1deg);
+    flex-shrink: 0;
+}
+
+.photo-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.click-hint {
+    position: absolute;
+    bottom: clamp(-50px, -8vw, -60px);
+    left: 50%;
+    transform: translateX(-50%);
+    color: #e2e8f0;
+    font-family: 'Lora', serif;
+    font-size: clamp(0.75rem, 3vw, 0.95rem);
+    opacity: 0.8;
+    letter-spacing: 1px;
+    animation: pulse 2s infinite;
+    white-space: nowrap;
+    background: rgba(0, 0, 0, 0.3);
+    padding: clamp(6px, 2vw, 8px) clamp(12px, 4vw, 16px);
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Extra small phones (iPhone SE, etc) */
+@media (max-width: 359px) {
+    .card-content p {
+        font-size: 0.7rem;
+        line-height: 1.4;
+    }
+
+    .card-content p br {
+        display: none;
+    }
+}
+
+/* Landscape mode on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .envelope-container.open {
+        transform: translateY(var(--envelope-open-translate)) scale(1);
+    }
+
+    .click-hint {
+        bottom: -40px;
+    }
+
+    .photo-placeholder {
+        height: clamp(60px, 20vh, 100px);
+    }
+}
+
+/* Tablet and Desktop enhancements */
+@media (min-width: 768px) {
+    .envelope-container:not(.open):hover {
+        transform: translateY(-5px) scale(1.02);
+        animation-play-state: paused;
+    }
+
+    .envelope:hover {
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .envelope-container:not(.open) {
+        animation: none;
+    }
+
+    .envelope-container,
+    .flap-top,
+    .card {
+        transition-duration: 0.1s;
+    }
+
+    .click-hint {
+        animation: none;
+        opacity: 0.8;
+    }
+}

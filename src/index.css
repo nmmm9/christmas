@@ -1,0 +1,108 @@
+:root {
+  /* Warm Winter Cabin Palette */
+  --color-bg: #1a2e1a;
+  --color-bg-light: #2d4a2d;
+
+  --color-envelope: #8e1d1d;
+  --color-envelope-dark: #681515;
+  --color-flap: #a32222;
+
+  --color-gold: #e6b800;
+  --color-gold-shadow: #b38f00;
+
+  --color-card-bg: #fffdf5;
+  --color-text: #3e2723;
+
+  /* Responsive Sizing Variables */
+  --envelope-width: min(85vw, 320px);
+  --envelope-height: calc(var(--envelope-width) * 0.6875);
+  --card-slide-distance: calc(var(--envelope-height) * 1.1);
+  --envelope-open-translate: calc(var(--envelope-height) * 0.55);
+
+  font-family: 'Lora', serif;
+  line-height: 1.6;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: rgba(255, 255, 255, 0.9);
+  background-color: var(--color-bg);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Small phones */
+@media (min-width: 360px) {
+  :root {
+    --envelope-width: min(80vw, 340px);
+  }
+}
+
+/* Large phones */
+@media (min-width: 480px) {
+  :root {
+    --envelope-width: min(75vw, 380px);
+  }
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+  :root {
+    --envelope-width: min(60vw, 420px);
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  :root {
+    --envelope-width: min(50vw, 480px);
+  }
+}
+
+/* Large Desktop */
+@media (min-width: 1440px) {
+  :root {
+    --envelope-width: 520px;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 280px;
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
+  overflow: hidden;
+  background: radial-gradient(circle at center, var(--color-bg-light) 0%, var(--color-bg) 70%, #0d180d 100%);
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+#root {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 20px;
+}
+
+/* Landscape mode adjustments for mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  :root {
+    --envelope-width: min(45vh, 300px);
+    --envelope-open-translate: calc(var(--envelope-height) * 0.4);
+  }
+
+  #root {
+    padding: 10px;
+  }
+}
