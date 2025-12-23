@@ -259,6 +259,10 @@ const FallingLetter = ({ isVisible, onComplete }) => {
                   <p className="signature">
                     - 맥스 드림 -
                   </p>
+
+                  <div className="letter-image">
+                    <img src={`${import.meta.env.BASE_URL}tosof.png`} alt="To SOF" />
+                  </div>
                 </div>
 
                 <div className="letter-footer">
