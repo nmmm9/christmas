@@ -57,18 +57,18 @@ function App() {
         if (currentSpeed >= 1.5) {
           clearInterval(accelerate);
 
-          // Show letter after running for a bit
+          // Play music when running starts
+          if (!audioRef.current) {
+            audioRef.current = new Audio(BG_MUSIC);
+            audioRef.current.volume = 0.3;
+            audioRef.current.loop = true;
+            audioRef.current.play().catch(e => console.log('Audio:', e));
+          }
+
+          // Show letter after running for longer (4 seconds)
           setTimeout(() => {
             setShowLetter(true);
-
-            // Play music
-            if (!audioRef.current) {
-              audioRef.current = new Audio(BG_MUSIC);
-              audioRef.current.volume = 0.3;
-              audioRef.current.loop = true;
-              audioRef.current.play().catch(e => console.log('Audio:', e));
-            }
-          }, 1500);
+          }, 4000);
         }
       }, 100);
     }

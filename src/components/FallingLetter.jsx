@@ -12,40 +12,49 @@ const FallingLetter = ({ isVisible, onComplete }) => {
       // Reset state
       setLetterOpen(false);
 
-      // Falling animation with rotation
+      // Gentle floating down animation (like a feather)
       gsap.fromTo(envelopeRef.current,
         {
           y: '-100vh',
-          rotation: -30,
+          rotation: -15,
           opacity: 0,
-          scale: 0.5
+          scale: 0.8
         },
         {
           y: '0vh',
           rotation: 0,
           opacity: 1,
           scale: 1,
-          duration: 2,
-          ease: "bounce.out",
+          duration: 4,
+          ease: "power1.out",
           onComplete: () => {
-            // Wobble effect after landing
+            // Gentle settle wobble
             gsap.to(envelopeRef.current, {
-              rotation: 5,
-              duration: 0.2,
+              rotation: 3,
+              duration: 0.4,
               yoyo: true,
-              repeat: 3,
-              ease: "power1.inOut"
+              repeat: 2,
+              ease: "sine.inOut"
             });
           }
         }
       );
 
-      // Wind flutter effect during fall
+      // Swaying side-to-side motion (like falling through air)
       gsap.to(envelopeRef.current, {
-        x: 30,
-        duration: 0.5,
+        x: 40,
+        duration: 1.2,
         yoyo: true,
         repeat: 3,
+        ease: "sine.inOut"
+      });
+
+      // Additional gentle rotation during fall
+      gsap.to(envelopeRef.current, {
+        rotation: "+=10",
+        duration: 0.8,
+        yoyo: true,
+        repeat: 4,
         ease: "sine.inOut"
       });
     }
