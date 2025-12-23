@@ -5,8 +5,8 @@ import FallingLetter from './components/FallingLetter';
 import { useShake, useTilt } from './hooks/useShake';
 import './styles/app.css';
 
-// Background music
-const BG_MUSIC = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Jingle_Bells_%28Kevin_MacLeod%29_-_Kevin_MacLeod.ogg";
+// Background music - Mariah Carey
+const BG_MUSIC = "/christmas-song.mp3";
 
 function App() {
   const [permissionGranted, setPermissionGranted] = useState(false);
@@ -21,6 +21,7 @@ function App() {
 
   const audioRef = useRef(null);
   const whipCountRef = useRef(0);
+  const [musicStarted, setMusicStarted] = useState(false);
 
   // Check iOS permission requirement
   useEffect(() => {
@@ -31,6 +32,35 @@ function App() {
     if (!needsRequest) {
       setPermissionGranted(true);
     }
+  }, []);
+
+  // Start music on first interaction
+  const startMusic = useCallback(() => {
+    if (!musicStarted && !audioRef.current) {
+      audioRef.current = new Audio(BG_MUSIC);
+      audioRef.current.volume = 0.5;
+      audioRef.current.loop = true;
+      audioRef.current.play().catch(e => console.log('Audio:', e));
+      setMusicStarted(true);
+    }
+  }, [musicStarted]);
+
+  // Try to play music on page load (works if autoplay is allowed)
+  useEffect(() => {
+    const tryAutoplay = () => {
+      if (!audioRef.current) {
+        audioRef.current = new Audio(BG_MUSIC);
+        audioRef.current.volume = 0.5;
+        audioRef.current.loop = true;
+        audioRef.current.play()
+          .then(() => setMusicStarted(true))
+          .catch(() => {
+            // Autoplay blocked, will play on first click
+            audioRef.current = null;
+          });
+      }
+    };
+    tryAutoplay();
   }, []);
 
   // Handle shake = whip action
@@ -56,14 +86,6 @@ function App() {
 
         if (currentSpeed >= 1.5) {
           clearInterval(accelerate);
-
-          // Play music when running starts
-          if (!audioRef.current) {
-            audioRef.current = new Audio(BG_MUSIC);
-            audioRef.current.volume = 0.3;
-            audioRef.current.loop = true;
-            audioRef.current.play().catch(e => console.log('Audio:', e));
-          }
 
           // Show letter after running for longer (4 seconds)
           setTimeout(() => {
@@ -100,7 +122,7 @@ function App() {
   }
 
   return (
-    <div className="app">
+    <div className="app" onClick={startMusic}>
       {/* 3D Santa Scene */}
       <SantaScene
         tilt={tilt}

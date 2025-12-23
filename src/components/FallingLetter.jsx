@@ -63,29 +63,72 @@ const FallingLetter = ({ isVisible, onComplete }) => {
     }
   }, [isVisible]);
 
-  // Animate letter sliding out of envelope
+  // Animate letter sliding out of envelope - more dynamic!
   useEffect(() => {
     if (letterOpen && letterPaperRef.current && !showFullLetter) {
-      // Letter slides up out of envelope - slow and gentle
-      gsap.fromTo(letterPaperRef.current,
+      const tl = gsap.timeline({
+        onComplete: () => setShowFullLetter(true)
+      });
+
+      // Initial burst out with rotation
+      tl.fromTo(letterPaperRef.current,
         {
-          y: 80,
+          y: 120,
           opacity: 0,
-          scale: 0.85,
-          rotationX: -20
+          scale: 0.3,
+          rotationX: -45,
+          rotationY: 15,
+          rotationZ: -10
         },
         {
-          y: 0,
+          y: -30,
           opacity: 1,
-          scale: 1,
-          rotationX: 0,
-          duration: 1.8,
-          ease: "power2.out",
-          onComplete: () => {
-            setShowFullLetter(true);
-          }
+          scale: 1.15,
+          rotationX: 15,
+          rotationY: -10,
+          rotationZ: 8,
+          duration: 0.6,
+          ease: "back.out(1.5)"
         }
-      );
+      )
+      // Overshoot bounce
+      .to(letterPaperRef.current, {
+        y: 20,
+        scale: 0.95,
+        rotationX: -8,
+        rotationY: 5,
+        rotationZ: -5,
+        duration: 0.3,
+        ease: "power2.in"
+      })
+      // Spring back up
+      .to(letterPaperRef.current, {
+        y: -15,
+        scale: 1.08,
+        rotationX: 5,
+        rotationY: -3,
+        rotationZ: 3,
+        duration: 0.25,
+        ease: "power2.out"
+      })
+      // Settle with gentle wobble
+      .to(letterPaperRef.current, {
+        y: 0,
+        scale: 1,
+        rotationX: 0,
+        rotationY: 0,
+        rotationZ: 0,
+        duration: 0.4,
+        ease: "elastic.out(1, 0.5)"
+      })
+      // Final subtle float
+      .to(letterPaperRef.current, {
+        y: -5,
+        duration: 1.5,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1
+      });
     }
   }, [letterOpen, showFullLetter]);
 
