@@ -244,9 +244,9 @@
 
 .sparkle {
   position: absolute;
-  color: #ffd700;
-  font-size: clamp(12px, 4vw, 20px);
-  animation: sparkleFloat 2s ease-in-out infinite;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: clamp(8px, 2vw, 12px);
+  animation: sparkleFloat 4s ease-in-out infinite;
   opacity: 0;
 }
 
@@ -256,8 +256,8 @@
     transform: translateY(0) scale(0.5);
   }
   50% {
-    opacity: 1;
-    transform: translateY(-20px) scale(1);
+    opacity: 0.5;
+    transform: translateY(-10px) scale(0.8);
   }
 }
 

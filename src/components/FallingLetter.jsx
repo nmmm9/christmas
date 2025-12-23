@@ -163,20 +163,20 @@ const FallingLetter = ({ isVisible, onComplete }) => {
         )}
       </div>
 
-      {/* Sparkle effects */}
+      {/* Subtle sparkle effects */}
       {isVisible && (
         <div className="sparkles">
-          {[...Array(20)].map((_, i) => (
+          {[...Array(8)].map((_, i) => (
             <div
               key={i}
               className="sparkle"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 2}s`,
-                animationDuration: `${1 + Math.random()}s`
+                left: `${10 + Math.random() * 80}%`,
+                top: `${10 + Math.random() * 80}%`,
+                animationDelay: `${Math.random() * 4}s`,
+                animationDuration: `${3 + Math.random() * 2}s`
               }}
-            >✦</div>
+            >✧</div>
           ))}
         </div>
       )}
