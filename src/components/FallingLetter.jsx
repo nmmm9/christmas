@@ -146,7 +146,7 @@ const FallingLetter = ({ isVisible, onComplete }) => {
                   </p>
 
                   <p className="signature">
-                    - 당신을 응원하는 산타 🎅 -
+                    - 따뜻한 마음을 담아 -
                   </p>
                 </div>
 
