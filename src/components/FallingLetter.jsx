@@ -235,18 +235,29 @@ const FallingLetter = ({ isVisible, onComplete }) => {
 
                 <div className="letter-body">
                   <p className="greeting">
-                    올 한 해<br />
-                    당신의 따스한 온기 덕분에<br />
-                    행복했습니다.
+                    이제 1달밖에 안되었지만<br />
+                    잘 챙겨주셔서 감사합니다..
                   </p>
 
                   <p className="wish">
-                    따뜻하고 포근한<br />
-                    연말 되세요.
+                    너무너무 착하시고<br />
+                    너무너무 친절하시고<br />
+                    너무너무 일도 잘한다고<br />
+                    옆에서 느꼈습니다.
+                  </p>
+
+                  <p className="wish">
+                    야물딱지신 소프님처럼<br />
+                    2025년도 마무리 야물딱지게 하시고
+                  </p>
+
+                  <p className="wish">
+                    2026년에는 야근 많이 하지마시고<br />
+                    행복한 일만 가득하시길 바랍니다...
                   </p>
 
                   <p className="signature">
-                    - 따뜻한 마음을 담아 -
+                    - 맥스 드림 -
                   </p>
                 </div>
 
