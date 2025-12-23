@@ -109,7 +109,7 @@ const FallingLetter = ({ isVisible, onComplete }) => {
               <div className="envelope-flap"></div>
               <div className="envelope-front">
                 <div className="wax-seal">
-                  <span>🎅</span>
+                  <span>❄</span>
                 </div>
               </div>
             </div>
