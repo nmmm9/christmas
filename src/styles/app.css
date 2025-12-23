@@ -58,6 +58,43 @@ html, body {
   animation: hintAppear 1s ease-out 1s both;
 }
 
+.shake-hint.santa-hint {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 20px 30px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hint-sub {
+  font-size: clamp(0.75rem, 3vw, 0.9rem);
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 5px;
+}
+
+/* Running indicator */
+.running-indicator {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  animation: runningPulse 0.5s ease-in-out infinite;
+}
+
+.running-indicator p {
+  font-size: clamp(1.5rem, 6vw, 2rem);
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+}
+
+@keyframes runningPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.1); }
+}
+
 @keyframes hintAppear {
   from {
     opacity: 0;

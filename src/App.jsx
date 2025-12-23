@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import MotionPermission from './components/MotionPermission';
-import SnowGlobe from './components/SnowGlobe';
-import Letter from './components/Letter';
+import SantaScene from './components/SantaScene';
+import FallingLetter from './components/FallingLetter';
 import { useShake, useTilt } from './hooks/useShake';
 import './styles/app.css';
 
@@ -10,14 +10,19 @@ const BG_MUSIC = "https://upload.wikimedia.org/wikipedia/commons/e/e9/Jingle_Bel
 
 function App() {
   const [permissionGranted, setPermissionGranted] = useState(false);
-  const [letterOpen, setLetterOpen] = useState(false);
-  const [shakeIntensity, setShakeIntensity] = useState(0);
-  const [showHint, setShowHint] = useState(true);
-  const [audioPlaying, setAudioPlaying] = useState(false);
-
-  // Check if iOS requires permission
   const [needsPermission, setNeedsPermission] = useState(false);
 
+  // Scene states
+  const [isWhipping, setIsWhipping] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
+  const [speed, setSpeed] = useState(0);
+  const [showLetter, setShowLetter] = useState(false);
+  const [showHint, setShowHint] = useState(true);
+
+  const audioRef = useRef(null);
+  const whipCountRef = useRef(0);
+
+  // Check iOS permission requirement
   useEffect(() => {
     const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const needsRequest = iOS && typeof DeviceMotionEvent.requestPermission === 'function';
@@ -28,55 +33,65 @@ function App() {
     }
   }, []);
 
-  // Play background music
-  useEffect(() => {
-    if (letterOpen && !audioPlaying) {
-      const audio = new Audio(BG_MUSIC);
-      audio.volume = 0.3;
-      audio.loop = true;
-      audio.play().catch(e => console.log('Audio play failed:', e));
-      setAudioPlaying(true);
-    }
-  }, [letterOpen, audioPlaying]);
-
-  // Handle shake event
+  // Handle shake = whip action
   const handleShake = useCallback(() => {
-    if (!letterOpen) {
-      // Trigger intense shake animation
-      setShakeIntensity(1);
-      setTimeout(() => setShakeIntensity(0), 500);
+    if (showLetter) return;
 
-      // Open letter after short delay
-      setTimeout(() => {
-        setLetterOpen(true);
-        setShowHint(false);
-      }, 300);
+    // Whip animation
+    setIsWhipping(true);
+    setTimeout(() => setIsWhipping(false), 300);
+
+    whipCountRef.current += 1;
+    setShowHint(false);
+
+    // After 2-3 whips, start running
+    if (whipCountRef.current >= 2 && !isRunning) {
+      setIsRunning(true);
+
+      // Accelerate
+      let currentSpeed = 0;
+      const accelerate = setInterval(() => {
+        currentSpeed += 0.1;
+        setSpeed(currentSpeed);
+
+        if (currentSpeed >= 1.5) {
+          clearInterval(accelerate);
+
+          // Show letter after running for a bit
+          setTimeout(() => {
+            setShowLetter(true);
+
+            // Play music
+            if (!audioRef.current) {
+              audioRef.current = new Audio(BG_MUSIC);
+              audioRef.current.volume = 0.3;
+              audioRef.current.loop = true;
+              audioRef.current.play().catch(e => console.log('Audio:', e));
+            }
+          }, 1500);
+        }
+      }, 100);
     }
-  }, [letterOpen]);
+  }, [isRunning, showLetter]);
 
-  // Shake detection hook
+  // Shake detection
   const { shakeCount } = useShake(handleShake, 12);
 
-  // Tilt detection hook
+  // Tilt detection
   const { tilt } = useTilt();
 
-  // Update shake intensity based on shake count
-  useEffect(() => {
-    if (shakeCount > 0 && !letterOpen) {
-      setShakeIntensity(0.5);
-      const timer = setTimeout(() => setShakeIntensity(0), 200);
-      return () => clearTimeout(timer);
-    }
-  }, [shakeCount, letterOpen]);
-
-  // Permission granted handler
+  // Permission granted
   const handlePermissionGranted = () => {
     setPermissionGranted(true);
   };
 
-  // Close letter
-  const handleCloseLetter = () => {
-    setLetterOpen(false);
+  // Letter closed - reset for replay
+  const handleLetterComplete = () => {
+    setShowLetter(false);
+    setIsRunning(false);
+    setSpeed(0);
+    whipCountRef.current = 0;
+    setShowHint(true);
   };
 
   // Show permission screen if needed
@@ -86,28 +101,35 @@ function App() {
 
   return (
     <div className="app">
-      {/* Background gradient */}
-      <div className="app-background" />
-
-      {/* 3D Snow Globe */}
-      <SnowGlobe tilt={tilt} shakeIntensity={shakeIntensity} />
+      {/* 3D Santa Scene */}
+      <SantaScene
+        tilt={tilt}
+        isRunning={isRunning}
+        isWhipping={isWhipping}
+        speed={speed}
+      />
 
       {/* Shake hint */}
-      {showHint && !letterOpen && (
-        <div className="shake-hint">
-          <div className="hint-icon">📱</div>
-          <p className="hint-text">흔들어 주세요!</p>
-          <div className="hint-animation">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
+      {showHint && !showLetter && (
+        <div className="shake-hint santa-hint">
+          <div className="hint-icon">🏇</div>
+          <p className="hint-text">흔들어서 출발!</p>
+          <p className="hint-sub">폰을 흔들면 채찍으로 루돌프를 출발시켜요</p>
         </div>
       )}
 
-      {/* Letter popup */}
-      <Letter isOpen={letterOpen} onClose={handleCloseLetter} />
+      {/* Running indicator */}
+      {isRunning && !showLetter && (
+        <div className="running-indicator">
+          <p>🦌 달리는 중... 💨</p>
+        </div>
+      )}
 
+      {/* Falling Letter */}
+      <FallingLetter
+        isVisible={showLetter}
+        onComplete={handleLetterComplete}
+      />
     </div>
   );
 }
