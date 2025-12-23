@@ -154,11 +154,9 @@
 .letter-paper {
   background: linear-gradient(135deg, #fffef9 0%, #faf8f0 100%);
   border-radius: 8px;
-  padding: clamp(20px, 5vw, 30px);
+  padding: clamp(15px, 4vw, 20px);
   max-width: 320px;
   width: 85vw;
-  max-height: 70vh;
-  overflow-y: auto;
   box-shadow:
     0 15px 40px rgba(0, 0, 0, 0.25),
     inset 0 0 50px rgba(255, 250, 240, 0.5);
@@ -192,20 +190,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .letter-header h1 {
   font-family: 'Great Vibes', cursive;
-  font-size: clamp(1.6rem, 7vw, 2.2rem);
+  font-size: clamp(1.3rem, 5vw, 1.7rem);
   color: #c41e3a;
   margin: 0;
   text-shadow: 2px 2px 4px rgba(196, 30, 58, 0.2);
 }
 
 .letter-header .snowflake {
-  font-size: clamp(1rem, 4vw, 1.3rem);
+  font-size: clamp(0.8rem, 3vw, 1rem);
   color: #87ceeb;
   animation: snowflakeSpin 3s linear infinite;
 }
@@ -221,48 +219,48 @@
 
 .letter-body .greeting {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(0.95rem, 4vw, 1.15rem);
+  font-size: clamp(0.8rem, 3.2vw, 0.95rem);
   font-weight: 500;
   color: #3e2723;
-  line-height: 1.8;
-  margin: 0 0 12px 0;
+  line-height: 1.5;
+  margin: 0 0 8px 0;
   word-break: keep-all;
 }
 
 .letter-body .wish {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(0.9rem, 3.5vw, 1.05rem);
+  font-size: clamp(0.75rem, 3vw, 0.9rem);
   color: #5d4037;
-  line-height: 1.6;
-  margin: 0 0 15px 0;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
 }
 
 .letter-body .signature {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
-  font-size: clamp(0.85rem, 3.5vw, 1rem);
+  font-size: clamp(0.75rem, 3vw, 0.85rem);
   color: #8d6e63;
-  margin: 15px 0 0 0;
+  margin: 10px 0 0 0;
 }
 
 .letter-image {
-  margin-top: 20px;
+  margin-top: 12px;
   text-align: center;
 }
 
 .letter-image img {
   max-width: 100%;
-  width: clamp(180px, 60vw, 250px);
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  width: clamp(130px, 45vw, 180px);
+  border-radius: 6px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
 .letter-footer {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  margin-top: 15px;
-  font-size: 1.1rem;
+  gap: 10px;
+  margin-top: 10px;
+  font-size: 0.9rem;
 }
 
 .close-hint {
