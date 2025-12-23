@@ -6,7 +6,7 @@ import { useShake, useTilt } from './hooks/useShake';
 import './styles/app.css';
 
 // Background music - Mariah Carey
-const BG_MUSIC = "/christmas-song.mp3";
+const BG_MUSIC = import.meta.env.BASE_URL + "christmas-song.mp3";
 
 function App() {
   const [permissionGranted, setPermissionGranted] = useState(false);
