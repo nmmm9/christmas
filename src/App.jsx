@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import PasswordScreen from './components/PasswordScreen';
 import MotionPermission from './components/MotionPermission';
 import SantaScene from './components/SantaScene';
 import FallingLetter from './components/FallingLetter';
@@ -11,6 +12,7 @@ const BG_MUSIC = import.meta.env.BASE_URL + "christmas-song.mp3";
 const WHIP_SOUND = import.meta.env.BASE_URL + "whip-sound.mp3";
 
 function App() {
+  const [authenticated, setAuthenticated] = useState(false);
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [needsPermission, setNeedsPermission] = useState(false);
 
@@ -123,6 +125,11 @@ function App() {
     whipCountRef.current = 0;
     setShowHint(true);
   };
+
+  // Show password screen first
+  if (!authenticated) {
+    return <PasswordScreen onSuccess={() => setAuthenticated(true)} />;
+  }
 
   // Show permission screen if needed
   if (needsPermission && !permissionGranted) {
