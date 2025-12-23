@@ -35,29 +35,27 @@ const MotionPermission = ({ onGranted }) => {
     <div className="permission-overlay">
       <div className="permission-card">
         <div className="permission-icon">
-          <div className="snowglobe-icon">
-            <div className="globe"></div>
-            <div className="base"></div>
-            <div className="snow-particle p1"></div>
-            <div className="snow-particle p2"></div>
-            <div className="snow-particle p3"></div>
+          <div className="santa-sleigh-icon">
+            <span className="santa">🎅</span>
+            <span className="sleigh">🛷</span>
+            <span className="rudolph">🦌</span>
           </div>
         </div>
 
         <h1 className="permission-title">Merry Christmas</h1>
-        <p className="permission-subtitle">🎄 특별한 선물이 도착했어요</p>
+        <p className="permission-subtitle">🎄 산타의 썰매에 탑승하세요!</p>
 
         <p className="permission-description">
-          스노우 글로브를 흔들어<br />
-          숨겨진 편지를 확인하세요!
+          폰을 흔들어 루돌프를 출발시키고<br />
+          특별한 편지를 받아보세요!
         </p>
 
         <button
           className="permission-button"
           onClick={handleRequestPermission}
         >
-          <span className="button-icon">📱</span>
-          <span className="button-text">흔들기 활성화</span>
+          <span className="button-icon">🦌</span>
+          <span className="button-text">출발 준비!</span>
         </button>
 
         <p className="permission-hint">

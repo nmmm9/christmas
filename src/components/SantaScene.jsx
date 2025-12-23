@@ -4,137 +4,310 @@ import { Stars, Float } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
 
-// Rudolph the Reindeer (viewed from behind)
+// Rudolph the Reindeer (viewed from behind) - Cute cartoon style
 const Rudolph = ({ isRunning, onWhip }) => {
   const groupRef = useRef();
   const noseRef = useRef();
-  const [headBob, setHeadBob] = useState(0);
+  const leftFrontLegRef = useRef();
+  const rightFrontLegRef = useRef();
+  const leftBackLegRef = useRef();
+  const rightBackLegRef = useRef();
+  const headRef = useRef();
+  const tailRef = useRef();
 
   useFrame((state, delta) => {
     if (!groupRef.current) return;
 
+    const time = state.clock.elapsedTime;
+
     if (isRunning) {
-      // Running animation - bobbing up and down
-      setHeadBob(prev => prev + delta * 15);
-      groupRef.current.position.y = Math.sin(headBob) * 0.15;
-      groupRef.current.rotation.x = Math.sin(headBob * 0.5) * 0.05;
+      // Running animation - galloping motion
+      const gallop = Math.sin(time * 12);
+      const gallop2 = Math.sin(time * 12 + Math.PI);
+
+      // Body bounce
+      groupRef.current.position.y = Math.abs(Math.sin(time * 12)) * 0.1;
+
+      // Head bob
+      if (headRef.current) {
+        headRef.current.rotation.x = Math.sin(time * 12) * 0.1;
+      }
+
+      // Leg animations - galloping
+      if (leftFrontLegRef.current) {
+        leftFrontLegRef.current.rotation.x = gallop * 0.6;
+      }
+      if (rightFrontLegRef.current) {
+        rightFrontLegRef.current.rotation.x = gallop2 * 0.6;
+      }
+      if (leftBackLegRef.current) {
+        leftBackLegRef.current.rotation.x = gallop2 * 0.5;
+      }
+      if (rightBackLegRef.current) {
+        rightBackLegRef.current.rotation.x = gallop * 0.5;
+      }
+
+      // Tail wag
+      if (tailRef.current) {
+        tailRef.current.rotation.x = Math.sin(time * 15) * 0.3;
+      }
+    } else {
+      // Idle animation - gentle breathing
+      groupRef.current.position.y = Math.sin(time * 2) * 0.02;
+
+      if (tailRef.current) {
+        tailRef.current.rotation.x = Math.sin(time * 3) * 0.1;
+      }
     }
 
     // Nose glow pulsing
     if (noseRef.current) {
-      noseRef.current.material.emissiveIntensity = 1.5 + Math.sin(state.clock.elapsedTime * 3) * 0.5;
+      noseRef.current.material.emissiveIntensity = 2 + Math.sin(time * 4) * 0.8;
     }
   });
 
   return (
-    <group ref={groupRef} position={[0, 0, -4]}>
-      {/* Body */}
-      <mesh position={[0, 0, 0]}>
-        <capsuleGeometry args={[0.6, 1.2, 8, 16]} />
-        <meshStandardMaterial color="#8B4513" roughness={0.8} />
+    <group ref={groupRef} position={[0, -0.3, -3.5]}>
+      {/* Main Body - more rounded and cute */}
+      <mesh position={[0, 0.3, 0]}>
+        <sphereGeometry args={[0.7, 32, 32]} />
+        <meshStandardMaterial color="#8B5A2B" roughness={0.9} />
+      </mesh>
+      {/* Body back extension */}
+      <mesh position={[0, 0.35, 0.4]}>
+        <sphereGeometry args={[0.55, 32, 32]} />
+        <meshStandardMaterial color="#8B5A2B" roughness={0.9} />
       </mesh>
 
-      {/* Neck */}
-      <mesh position={[0, 0.5, -0.7]} rotation={[0.5, 0, 0]}>
-        <capsuleGeometry args={[0.25, 0.6, 8, 16]} />
-        <meshStandardMaterial color="#8B4513" roughness={0.8} />
+      {/* Cream colored belly */}
+      <mesh position={[0, 0.05, 0.1]} rotation={[0.2, 0, 0]}>
+        <sphereGeometry args={[0.45, 32, 32]} />
+        <meshStandardMaterial color="#DEB887" roughness={0.9} />
       </mesh>
 
-      {/* Head */}
-      <group position={[0, 0.9, -1.2]}>
+      {/* Neck - slightly curved forward */}
+      <mesh position={[0, 0.65, -0.45]} rotation={[0.7, 0, 0]}>
+        <capsuleGeometry args={[0.2, 0.5, 16, 16]} />
+        <meshStandardMaterial color="#8B5A2B" roughness={0.9} />
+      </mesh>
+
+      {/* Head Group */}
+      <group ref={headRef} position={[0, 0.95, -0.9]}>
+        {/* Main head - oval shaped */}
         <mesh>
-          <sphereGeometry args={[0.4, 16, 16]} />
-          <meshStandardMaterial color="#8B4513" roughness={0.8} />
+          <sphereGeometry args={[0.35, 32, 32]} />
+          <meshStandardMaterial color="#8B5A2B" roughness={0.9} />
         </mesh>
 
-        {/* Snout */}
-        <mesh position={[0, -0.1, -0.35]}>
-          <sphereGeometry args={[0.2, 16, 16]} />
-          <meshStandardMaterial color="#A0522D" roughness={0.8} />
+        {/* Face/Muzzle - elongated */}
+        <mesh position={[0, -0.1, -0.3]} rotation={[0.2, 0, 0]}>
+          <capsuleGeometry args={[0.18, 0.2, 16, 16]} />
+          <meshStandardMaterial color="#A0826D" roughness={0.9} />
         </mesh>
 
-        {/* Red Nose - Glowing! */}
-        <mesh ref={noseRef} position={[0, -0.1, -0.55]}>
+        {/* Cream colored chin/mouth area */}
+        <mesh position={[0, -0.2, -0.25]}>
           <sphereGeometry args={[0.12, 16, 16]} />
+          <meshStandardMaterial color="#DEB887" roughness={0.9} />
+        </mesh>
+
+        {/* RED GLOWING NOSE - the star feature! */}
+        <mesh ref={noseRef} position={[0, -0.12, -0.5]}>
+          <sphereGeometry args={[0.1, 32, 32]} />
           <meshStandardMaterial
             color="#ff0000"
-            emissive="#ff0000"
-            emissiveIntensity={2}
+            emissive="#ff3333"
+            emissiveIntensity={3}
           />
         </mesh>
-
-        {/* Point light from nose */}
-        <pointLight position={[0, -0.1, -0.55]} color="#ff0000" intensity={2} distance={5} />
-
-        {/* Ears */}
-        <mesh position={[-0.3, 0.3, 0]} rotation={[0, 0, -0.5]}>
-          <coneGeometry args={[0.1, 0.25, 8]} />
-          <meshStandardMaterial color="#8B4513" />
+        {/* Nose highlight */}
+        <mesh position={[0.02, -0.08, -0.52]}>
+          <sphereGeometry args={[0.025, 16, 16]} />
+          <meshStandardMaterial color="#ff6666" emissive="#ff6666" emissiveIntensity={1} />
         </mesh>
-        <mesh position={[0.3, 0.3, 0]} rotation={[0, 0, 0.5]}>
-          <coneGeometry args={[0.1, 0.25, 8]} />
-          <meshStandardMaterial color="#8B4513" />
+        {/* Strong nose glow */}
+        <pointLight position={[0, -0.12, -0.5]} color="#ff0000" intensity={3} distance={8} />
+
+        {/* Eyes - cute and expressive */}
+        <mesh position={[-0.12, 0.08, -0.25]}>
+          <sphereGeometry args={[0.08, 16, 16]} />
+          <meshStandardMaterial color="#1a1a1a" />
+        </mesh>
+        <mesh position={[0.12, 0.08, -0.25]}>
+          <sphereGeometry args={[0.08, 16, 16]} />
+          <meshStandardMaterial color="#1a1a1a" />
+        </mesh>
+        {/* Eye highlights */}
+        <mesh position={[-0.14, 0.1, -0.31]}>
+          <sphereGeometry args={[0.025, 8, 8]} />
+          <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={0.5} />
+        </mesh>
+        <mesh position={[0.1, 0.1, -0.31]}>
+          <sphereGeometry args={[0.025, 8, 8]} />
+          <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={0.5} />
         </mesh>
 
-        {/* Antlers */}
-        <group position={[-0.25, 0.4, 0.1]}>
-          <mesh rotation={[0, 0, -0.3]}>
-            <cylinderGeometry args={[0.03, 0.05, 0.5, 8]} />
-            <meshStandardMaterial color="#4a3728" />
+        {/* Ears - floppy and cute */}
+        <mesh position={[-0.28, 0.15, 0.05]} rotation={[0.3, 0.3, -0.6]}>
+          <capsuleGeometry args={[0.06, 0.18, 8, 16]} />
+          <meshStandardMaterial color="#8B5A2B" roughness={0.9} />
+        </mesh>
+        <mesh position={[0.28, 0.15, 0.05]} rotation={[0.3, -0.3, 0.6]}>
+          <capsuleGeometry args={[0.06, 0.18, 8, 16]} />
+          <meshStandardMaterial color="#8B5A2B" roughness={0.9} />
+        </mesh>
+        {/* Inner ear (pink) */}
+        <mesh position={[-0.3, 0.18, 0.02]} rotation={[0.3, 0.3, -0.6]}>
+          <capsuleGeometry args={[0.03, 0.1, 8, 16]} />
+          <meshStandardMaterial color="#DEB887" roughness={0.9} />
+        </mesh>
+        <mesh position={[0.3, 0.18, 0.02]} rotation={[0.3, -0.3, 0.6]}>
+          <capsuleGeometry args={[0.03, 0.1, 8, 16]} />
+          <meshStandardMaterial color="#DEB887" roughness={0.9} />
+        </mesh>
+
+        {/* Antlers - more elaborate and majestic */}
+        <group position={[-0.2, 0.35, 0.05]}>
+          {/* Main stem */}
+          <mesh rotation={[0.2, 0, -0.3]}>
+            <cylinderGeometry args={[0.025, 0.04, 0.45, 8]} />
+            <meshStandardMaterial color="#5D4037" roughness={0.8} />
           </mesh>
-          <mesh position={[-0.15, 0.3, 0]} rotation={[0, 0, -0.8]}>
-            <cylinderGeometry args={[0.02, 0.03, 0.25, 8]} />
-            <meshStandardMaterial color="#4a3728" />
+          {/* Branch 1 */}
+          <mesh position={[-0.12, 0.25, 0]} rotation={[0, 0, -0.9]}>
+            <cylinderGeometry args={[0.015, 0.025, 0.2, 8]} />
+            <meshStandardMaterial color="#5D4037" roughness={0.8} />
+          </mesh>
+          {/* Branch 2 */}
+          <mesh position={[-0.18, 0.35, 0.05]} rotation={[0.3, 0, -1.1]}>
+            <cylinderGeometry args={[0.012, 0.02, 0.15, 8]} />
+            <meshStandardMaterial color="#5D4037" roughness={0.8} />
+          </mesh>
+          {/* Top branch */}
+          <mesh position={[-0.08, 0.4, 0]} rotation={[-0.2, 0, -0.5]}>
+            <cylinderGeometry args={[0.01, 0.018, 0.12, 8]} />
+            <meshStandardMaterial color="#5D4037" roughness={0.8} />
           </mesh>
         </group>
-        <group position={[0.25, 0.4, 0.1]}>
-          <mesh rotation={[0, 0, 0.3]}>
-            <cylinderGeometry args={[0.03, 0.05, 0.5, 8]} />
-            <meshStandardMaterial color="#4a3728" />
+        <group position={[0.2, 0.35, 0.05]}>
+          {/* Main stem */}
+          <mesh rotation={[0.2, 0, 0.3]}>
+            <cylinderGeometry args={[0.025, 0.04, 0.45, 8]} />
+            <meshStandardMaterial color="#5D4037" roughness={0.8} />
           </mesh>
-          <mesh position={[0.15, 0.3, 0]} rotation={[0, 0, 0.8]}>
-            <cylinderGeometry args={[0.02, 0.03, 0.25, 8]} />
-            <meshStandardMaterial color="#4a3728" />
+          {/* Branch 1 */}
+          <mesh position={[0.12, 0.25, 0]} rotation={[0, 0, 0.9]}>
+            <cylinderGeometry args={[0.015, 0.025, 0.2, 8]} />
+            <meshStandardMaterial color="#5D4037" roughness={0.8} />
+          </mesh>
+          {/* Branch 2 */}
+          <mesh position={[0.18, 0.35, 0.05]} rotation={[0.3, 0, 1.1]}>
+            <cylinderGeometry args={[0.012, 0.02, 0.15, 8]} />
+            <meshStandardMaterial color="#5D4037" roughness={0.8} />
+          </mesh>
+          {/* Top branch */}
+          <mesh position={[0.08, 0.4, 0]} rotation={[-0.2, 0, 0.5]}>
+            <cylinderGeometry args={[0.01, 0.018, 0.12, 8]} />
+            <meshStandardMaterial color="#5D4037" roughness={0.8} />
           </mesh>
         </group>
       </group>
 
-      {/* Tail */}
-      <mesh position={[0, 0.2, 0.8]}>
-        <sphereGeometry args={[0.12, 8, 8]} />
-        <meshStandardMaterial color="#D2B48C" />
+      {/* Fluffy white tail */}
+      <group ref={tailRef} position={[0, 0.45, 0.9]}>
+        <mesh>
+          <sphereGeometry args={[0.1, 16, 16]} />
+          <meshStandardMaterial color="#F5F5DC" roughness={1} />
+        </mesh>
+        <mesh position={[0, 0.05, 0.05]}>
+          <sphereGeometry args={[0.07, 16, 16]} />
+          <meshStandardMaterial color="#FFFFF0" roughness={1} />
+        </mesh>
+      </group>
+
+      {/* Legs with hooves */}
+      {/* Front Left Leg */}
+      <group ref={leftFrontLegRef} position={[-0.25, -0.2, -0.35]}>
+        <mesh>
+          <capsuleGeometry args={[0.08, 0.4, 8, 16]} />
+          <meshStandardMaterial color="#8B5A2B" roughness={0.9} />
+        </mesh>
+        {/* Hoof */}
+        <mesh position={[0, -0.3, 0]}>
+          <cylinderGeometry args={[0.06, 0.08, 0.1, 8]} />
+          <meshStandardMaterial color="#2F1810" roughness={0.7} />
+        </mesh>
+      </group>
+
+      {/* Front Right Leg */}
+      <group ref={rightFrontLegRef} position={[0.25, -0.2, -0.35]}>
+        <mesh>
+          <capsuleGeometry args={[0.08, 0.4, 8, 16]} />
+          <meshStandardMaterial color="#8B5A2B" roughness={0.9} />
+        </mesh>
+        <mesh position={[0, -0.3, 0]}>
+          <cylinderGeometry args={[0.06, 0.08, 0.1, 8]} />
+          <meshStandardMaterial color="#2F1810" roughness={0.7} />
+        </mesh>
+      </group>
+
+      {/* Back Left Leg */}
+      <group ref={leftBackLegRef} position={[-0.3, -0.15, 0.4]}>
+        <mesh>
+          <capsuleGeometry args={[0.09, 0.45, 8, 16]} />
+          <meshStandardMaterial color="#8B5A2B" roughness={0.9} />
+        </mesh>
+        <mesh position={[0, -0.33, 0]}>
+          <cylinderGeometry args={[0.07, 0.09, 0.1, 8]} />
+          <meshStandardMaterial color="#2F1810" roughness={0.7} />
+        </mesh>
+      </group>
+
+      {/* Back Right Leg */}
+      <group ref={rightBackLegRef} position={[0.3, -0.15, 0.4]}>
+        <mesh>
+          <capsuleGeometry args={[0.09, 0.45, 8, 16]} />
+          <meshStandardMaterial color="#8B5A2B" roughness={0.9} />
+        </mesh>
+        <mesh position={[0, -0.33, 0]}>
+          <cylinderGeometry args={[0.07, 0.09, 0.1, 8]} />
+          <meshStandardMaterial color="#2F1810" roughness={0.7} />
+        </mesh>
+      </group>
+
+      {/* Christmas Harness - festive red with gold bells */}
+      <mesh position={[0, 0.35, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <torusGeometry args={[0.55, 0.035, 8, 32]} />
+        <meshStandardMaterial color="#B22222" roughness={0.5} />
+      </mesh>
+      {/* Harness strap going to neck */}
+      <mesh position={[0, 0.55, -0.25]} rotation={[0.5, 0, 0]}>
+        <boxGeometry args={[0.08, 0.4, 0.03]} />
+        <meshStandardMaterial color="#B22222" roughness={0.5} />
       </mesh>
 
-      {/* Back Legs */}
-      <mesh position={[-0.3, -0.7, 0.3]} rotation={[0.2, 0, 0]}>
-        <capsuleGeometry args={[0.12, 0.6, 8, 16]} />
-        <meshStandardMaterial color="#8B4513" />
+      {/* Golden Bells */}
+      <mesh position={[0, -0.15, 0.05]}>
+        <sphereGeometry args={[0.07, 16, 16]} />
+        <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.1} />
       </mesh>
-      <mesh position={[0.3, -0.7, 0.3]} rotation={[0.2, 0, 0]}>
-        <capsuleGeometry args={[0.12, 0.6, 8, 16]} />
-        <meshStandardMaterial color="#8B4513" />
+      <mesh position={[-0.35, 0.1, 0.1]}>
+        <sphereGeometry args={[0.05, 16, 16]} />
+        <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.1} />
       </mesh>
-
-      {/* Front Legs */}
-      <mesh position={[-0.25, -0.6, -0.5]} rotation={[-0.2, 0, 0]}>
-        <capsuleGeometry args={[0.1, 0.5, 8, 16]} />
-        <meshStandardMaterial color="#8B4513" />
-      </mesh>
-      <mesh position={[0.25, -0.6, -0.5]} rotation={[-0.2, 0, 0]}>
-        <capsuleGeometry args={[0.1, 0.5, 8, 16]} />
-        <meshStandardMaterial color="#8B4513" />
+      <mesh position={[0.35, 0.1, 0.1]}>
+        <sphereGeometry args={[0.05, 16, 16]} />
+        <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.1} />
       </mesh>
 
-      {/* Harness */}
-      <mesh position={[0, 0.1, -0.2]}>
-        <torusGeometry args={[0.65, 0.03, 8, 32]} />
-        <meshStandardMaterial color="#8B0000" metalness={0.3} />
+      {/* Holly decoration on harness */}
+      <mesh position={[0, 0.6, -0.1]}>
+        <sphereGeometry args={[0.04, 8, 8]} />
+        <meshStandardMaterial color="#ff0000" />
       </mesh>
-
-      {/* Bells on harness */}
-      <mesh position={[0, -0.5, -0.2]}>
-        <sphereGeometry args={[0.08, 8, 8]} />
-        <meshStandardMaterial color="#FFD700" metalness={0.8} roughness={0.2} />
+      <mesh position={[-0.05, 0.58, -0.1]}>
+        <sphereGeometry args={[0.03, 8, 8]} />
+        <meshStandardMaterial color="#ff0000" />
       </mesh>
     </group>
   );
@@ -146,7 +319,7 @@ const Reins = ({ isRunning }) => {
   const rightReinRef = useRef();
 
   useFrame((state) => {
-    const wobble = isRunning ? Math.sin(state.clock.elapsedTime * 10) * 0.02 : 0;
+    const wobble = isRunning ? Math.sin(state.clock.elapsedTime * 10) * 0.03 : 0;
     if (leftReinRef.current) {
       leftReinRef.current.rotation.x = wobble;
     }
@@ -157,24 +330,24 @@ const Reins = ({ isRunning }) => {
 
   const reinCurve = useMemo(() => {
     return new THREE.CatmullRomCurve3([
-      new THREE.Vector3(0, -0.5, 1),
-      new THREE.Vector3(0, -0.3, 0),
-      new THREE.Vector3(0, -0.4, -2),
-      new THREE.Vector3(0, 0, -3.5),
+      new THREE.Vector3(0, -0.8, 0.8),
+      new THREE.Vector3(0, -0.6, 0),
+      new THREE.Vector3(0, -0.5, -1.5),
+      new THREE.Vector3(0, 0.2, -3),
     ]);
   }, []);
 
   return (
     <group>
       {/* Left Rein */}
-      <mesh ref={leftReinRef} position={[-0.4, 0, 0]}>
-        <tubeGeometry args={[reinCurve, 20, 0.02, 8, false]} />
-        <meshStandardMaterial color="#3d2314" />
+      <mesh ref={leftReinRef} position={[-0.35, 0, 0]}>
+        <tubeGeometry args={[reinCurve, 20, 0.025, 8, false]} />
+        <meshStandardMaterial color="#4a3020" />
       </mesh>
       {/* Right Rein */}
-      <mesh ref={rightReinRef} position={[0.4, 0, 0]}>
-        <tubeGeometry args={[reinCurve, 20, 0.02, 8, false]} />
-        <meshStandardMaterial color="#3d2314" />
+      <mesh ref={rightReinRef} position={[0.35, 0, 0]}>
+        <tubeGeometry args={[reinCurve, 20, 0.025, 8, false]} />
+        <meshStandardMaterial color="#4a3020" />
       </mesh>
     </group>
   );
