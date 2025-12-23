@@ -49,8 +49,10 @@ function App() {
     }
   }, [musicStarted]);
 
-  // Try to play music on page load (works if autoplay is allowed)
+  // Try to play music after authentication
   useEffect(() => {
+    if (!authenticated) return;
+
     const tryAutoplay = () => {
       if (!audioRef.current) {
         audioRef.current = new Audio(BG_MUSIC);
@@ -65,7 +67,7 @@ function App() {
       }
     };
     tryAutoplay();
-  }, []);
+  }, [authenticated]);
 
   // Handle shake = whip action
   const handleShake = useCallback(() => {
