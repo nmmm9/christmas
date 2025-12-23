@@ -152,8 +152,8 @@ function App() {
       {showHint && !showLetter && (
         <div className="shake-hint santa-hint" onClick={handleShake}>
           <div className="hint-icon">🏇</div>
-          <p className="hint-text">흔들어서 출발!</p>
-          <p className="hint-sub">폰을 흔들거나 탭하세요</p>
+          <p className="hint-text">채찍(휴대폰)을 오른손에 들고</p>
+          <p className="hint-sub">루돌프를 3번 쳐주세요!</p>
         </div>
       )}
 
