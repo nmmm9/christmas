@@ -107,10 +107,9 @@ const FallingLetter = ({ isVisible, onComplete }) => {
           <div className="envelope-closed">
             <div className="envelope-body">
               <div className="envelope-flap"></div>
-              <div className="envelope-front">
-                <div className="wax-seal">
-                  <span>❄</span>
-                </div>
+              <div className="envelope-front"></div>
+              <div className="wax-seal">
+                <span>❄</span>
               </div>
             </div>
             <p className="tap-hint">탭해서 열기</p>

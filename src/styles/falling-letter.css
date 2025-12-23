@@ -61,26 +61,28 @@
 
 .wax-seal {
   position: absolute;
-  bottom: clamp(90px, 35vw, 130px);
-  left: clamp(-25px, -8vw, -30px);
-  width: clamp(50px, 15vw, 60px);
-  height: clamp(50px, 15vw, 60px);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(45px, 14vw, 55px);
+  height: clamp(45px, 14vw, 55px);
   background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(24px, 8vw, 30px);
+  font-size: clamp(20px, 6vw, 26px);
   box-shadow:
     0 4px 10px rgba(0, 0, 0, 0.3),
     inset 0 2px 3px rgba(255, 255, 255, 0.3);
   border: 3px solid #daa520;
   animation: sealPulse 2s ease-in-out infinite;
+  z-index: 10;
 }
 
 @keyframes sealPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.05); }
 }
 
 .tap-hint {
