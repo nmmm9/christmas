@@ -7,6 +7,8 @@ import './styles/app.css';
 
 // Background music - Mariah Carey
 const BG_MUSIC = import.meta.env.BASE_URL + "christmas-song.mp3";
+// Whip sound effect
+const WHIP_SOUND = import.meta.env.BASE_URL + "whip-sound.mp3";
 
 function App() {
   const [permissionGranted, setPermissionGranted] = useState(false);
@@ -66,6 +68,12 @@ function App() {
   // Handle shake = whip action
   const handleShake = useCallback(() => {
     if (showLetter) return;
+    if (isRunning) return; // Already running, no more whips needed
+
+    // Play whip sound
+    const whipSound = new Audio(WHIP_SOUND);
+    whipSound.volume = 0.7;
+    whipSound.play().catch(e => console.log('Whip sound:', e));
 
     // Whip animation
     setIsWhipping(true);
