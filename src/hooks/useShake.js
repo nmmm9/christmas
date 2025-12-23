@@ -1,10 +1,16 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 // iOS 13+ requires permission request for DeviceMotion
-export const useShake = (onShake, threshold = 15) => {
+export const useShake = (onShake, threshold = 15, externalPermission = null) => {
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
   const [shakeCount, setShakeCount] = useState(0);
+  const onShakeRef = useRef(onShake);
+
+  // Keep onShake callback ref updated
+  useEffect(() => {
+    onShakeRef.current = onShake;
+  }, [onShake]);
 
   useEffect(() => {
     // Detect iOS
@@ -16,6 +22,13 @@ export const useShake = (onShake, threshold = 15) => {
       setPermissionGranted(true);
     }
   }, []);
+
+  // If external permission is passed (from MotionPermission component), use it
+  useEffect(() => {
+    if (externalPermission === true) {
+      setPermissionGranted(true);
+    }
+  }, [externalPermission]);
 
   const requestPermission = useCallback(async () => {
     if (typeof DeviceMotionEvent.requestPermission === 'function') {
@@ -49,6 +62,8 @@ export const useShake = (onShake, threshold = 15) => {
       if (!accelerationIncludingGravity) return;
 
       const { x, y, z } = accelerationIncludingGravity;
+      if (x === null || y === null || z === null) return;
+
       const currentTime = Date.now();
       const timeDiff = currentTime - lastTime;
 
@@ -63,15 +78,15 @@ export const useShake = (onShake, threshold = 15) => {
           consecutiveShakes++;
           setShakeCount(prev => prev + 1);
 
-          if (consecutiveShakes >= 3 && !shakeDetected) {
+          if (consecutiveShakes >= 2 && !shakeDetected) {
             shakeDetected = true;
-            onShake?.();
+            onShakeRef.current?.();
 
             // Reset after shake detected
             setTimeout(() => {
               shakeDetected = false;
               consecutiveShakes = 0;
-            }, 1000);
+            }, 500);
           }
         } else {
           consecutiveShakes = Math.max(0, consecutiveShakes - 1);
@@ -84,12 +99,12 @@ export const useShake = (onShake, threshold = 15) => {
       }
     };
 
-    window.addEventListener('devicemotion', handleMotion);
+    window.addEventListener('devicemotion', handleMotion, true);
 
     return () => {
-      window.removeEventListener('devicemotion', handleMotion);
+      window.removeEventListener('devicemotion', handleMotion, true);
     };
-  }, [permissionGranted, onShake, threshold]);
+  }, [permissionGranted, threshold]);
 
   return {
     permissionGranted,
@@ -100,7 +115,7 @@ export const useShake = (onShake, threshold = 15) => {
 };
 
 // Hook for device tilt/orientation
-export const useTilt = () => {
+export const useTilt = (externalPermission = null) => {
   const [tilt, setTilt] = useState({ beta: 0, gamma: 0 });
   const [permissionGranted, setPermissionGranted] = useState(false);
 
@@ -130,6 +145,13 @@ export const useTilt = () => {
     }
   }, []);
 
+  // If external permission is passed (from MotionPermission component), use it
+  useEffect(() => {
+    if (externalPermission === true) {
+      setPermissionGranted(true);
+    }
+  }, [externalPermission]);
+
   useEffect(() => {
     if (!permissionGranted) return;
 
@@ -141,10 +163,10 @@ export const useTilt = () => {
       });
     };
 
-    window.addEventListener('deviceorientation', handleOrientation);
+    window.addEventListener('deviceorientation', handleOrientation, true);
 
     return () => {
-      window.removeEventListener('deviceorientation', handleOrientation);
+      window.removeEventListener('deviceorientation', handleOrientation, true);
     };
   }, [permissionGranted]);
 

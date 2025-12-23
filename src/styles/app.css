@@ -65,6 +65,13 @@ html, body {
   padding: 20px 30px;
   border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.shake-hint.santa-hint:active {
+  transform: translateX(-50%) scale(0.95);
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .hint-sub {

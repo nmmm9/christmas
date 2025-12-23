@@ -74,11 +74,11 @@ function App() {
     }
   }, [isRunning, showLetter]);
 
-  // Shake detection
-  const { shakeCount } = useShake(handleShake, 12);
+  // Shake detection - pass permissionGranted to enable on iOS
+  const { shakeCount } = useShake(handleShake, 10, permissionGranted);
 
-  // Tilt detection
-  const { tilt } = useTilt();
+  // Tilt detection - pass permissionGranted to enable on iOS
+  const { tilt } = useTilt(permissionGranted);
 
   // Permission granted
   const handlePermissionGranted = () => {
@@ -111,10 +111,10 @@ function App() {
 
       {/* Shake hint */}
       {showHint && !showLetter && (
-        <div className="shake-hint santa-hint">
+        <div className="shake-hint santa-hint" onClick={handleShake}>
           <div className="hint-icon">🏇</div>
           <p className="hint-text">흔들어서 출발!</p>
-          <p className="hint-sub">폰을 흔들면 채찍으로 루돌프를 출발시켜요</p>
+          <p className="hint-sub">폰을 흔들거나 탭하세요</p>
         </div>
       )}
 
