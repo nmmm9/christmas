@@ -373,7 +373,7 @@ const SantaBody = ({ isWhipping }) => {
   }, [isWhipping]);
 
   return (
-    <group position={[0, -0.8, 0.8]}>
+    <group position={[0, -0.2, 1.6]}>
       {/* Santa's belly/chest - moderately visible */}
       <mesh position={[0, -0.5, 0.4]}>
         <boxGeometry args={[1.8, 0.8, 0.7]} />
