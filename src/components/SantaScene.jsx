@@ -373,96 +373,96 @@ const SantaBody = ({ isWhipping }) => {
   }, [isWhipping]);
 
   return (
-    <group position={[0, -0.5, 1.5]}>
+    <group position={[0, 0, 0]}>
       {/* Santa's Coat/Chest - visible at bottom of screen */}
-      <mesh position={[0, -0.8, 0.5]}>
-        <boxGeometry args={[1.8, 1, 0.8]} />
+      <mesh position={[0, -1.2, 1]}>
+        <boxGeometry args={[2.5, 1.5, 1]} />
         <meshStandardMaterial color="#cc0000" roughness={0.8} />
       </mesh>
 
       {/* White fur trim on coat */}
-      <mesh position={[0, -0.35, 0.55]}>
-        <boxGeometry args={[1.9, 0.15, 0.7]} />
+      <mesh position={[0, -0.5, 1.1]}>
+        <boxGeometry args={[2.6, 0.2, 0.9]} />
         <meshStandardMaterial color="#f5f5f5" roughness={1} />
       </mesh>
 
       {/* Belt */}
-      <mesh position={[0, -0.55, 0.6]}>
-        <boxGeometry args={[1.7, 0.12, 0.65]} />
+      <mesh position={[0, -0.8, 1.15]}>
+        <boxGeometry args={[2.4, 0.18, 0.85]} />
         <meshStandardMaterial color="#1a1a1a" roughness={0.5} />
       </mesh>
       {/* Belt buckle */}
-      <mesh position={[0, -0.55, 0.95]}>
-        <boxGeometry args={[0.2, 0.15, 0.05]} />
+      <mesh position={[0, -0.8, 1.6]}>
+        <boxGeometry args={[0.3, 0.22, 0.08]} />
         <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.1} />
       </mesh>
 
-      {/* Left Arm */}
-      <group ref={leftArmRef} position={[-0.8, -0.3, 0.3]}>
+      {/* Left Arm - stretched forward holding reins */}
+      <group ref={leftArmRef} position={[-0.9, -0.6, 0.5]}>
         {/* Upper arm */}
-        <mesh rotation={[0.3, 0, 0.4]}>
-          <capsuleGeometry args={[0.12, 0.5, 8, 16]} />
+        <mesh rotation={[1.2, 0.2, 0.3]}>
+          <capsuleGeometry args={[0.15, 0.6, 8, 16]} />
           <meshStandardMaterial color="#cc0000" roughness={0.8} />
         </mesh>
         {/* Forearm */}
-        <mesh position={[-0.2, -0.4, -0.3]} rotation={[0.8, 0, 0.2]}>
-          <capsuleGeometry args={[0.1, 0.4, 8, 16]} />
+        <mesh position={[-0.1, -0.2, -0.6]} rotation={[0.5, 0, 0.1]}>
+          <capsuleGeometry args={[0.13, 0.5, 8, 16]} />
           <meshStandardMaterial color="#cc0000" roughness={0.8} />
         </mesh>
         {/* White cuff */}
-        <mesh position={[-0.25, -0.65, -0.5]} rotation={[0.8, 0, 0.2]}>
-          <cylinderGeometry args={[0.12, 0.12, 0.1, 16]} />
+        <mesh position={[-0.15, -0.35, -1]} rotation={[0.5, 0, 0.1]}>
+          <cylinderGeometry args={[0.15, 0.15, 0.12, 16]} />
           <meshStandardMaterial color="#f5f5f5" roughness={1} />
         </mesh>
-        {/* Hand (glove) */}
-        <mesh position={[-0.3, -0.8, -0.6]}>
-          <sphereGeometry args={[0.12, 16, 16]} />
+        {/* Hand (white glove) */}
+        <mesh position={[-0.2, -0.45, -1.2]}>
+          <sphereGeometry args={[0.14, 16, 16]} />
           <meshStandardMaterial color="#f5f5f5" roughness={0.9} />
         </mesh>
       </group>
 
-      {/* Right Arm */}
-      <group ref={rightArmRef} position={[0.8, -0.3, 0.3]}>
+      {/* Right Arm - stretched forward holding reins */}
+      <group ref={rightArmRef} position={[0.9, -0.6, 0.5]}>
         {/* Upper arm */}
-        <mesh rotation={[0.3, 0, -0.4]}>
-          <capsuleGeometry args={[0.12, 0.5, 8, 16]} />
+        <mesh rotation={[1.2, -0.2, -0.3]}>
+          <capsuleGeometry args={[0.15, 0.6, 8, 16]} />
           <meshStandardMaterial color="#cc0000" roughness={0.8} />
         </mesh>
         {/* Forearm */}
-        <mesh position={[0.2, -0.4, -0.3]} rotation={[0.8, 0, -0.2]}>
-          <capsuleGeometry args={[0.1, 0.4, 8, 16]} />
+        <mesh position={[0.1, -0.2, -0.6]} rotation={[0.5, 0, -0.1]}>
+          <capsuleGeometry args={[0.13, 0.5, 8, 16]} />
           <meshStandardMaterial color="#cc0000" roughness={0.8} />
         </mesh>
         {/* White cuff */}
-        <mesh position={[0.25, -0.65, -0.5]} rotation={[0.8, 0, -0.2]}>
-          <cylinderGeometry args={[0.12, 0.12, 0.1, 16]} />
+        <mesh position={[0.15, -0.35, -1]} rotation={[0.5, 0, -0.1]}>
+          <cylinderGeometry args={[0.15, 0.15, 0.12, 16]} />
           <meshStandardMaterial color="#f5f5f5" roughness={1} />
         </mesh>
-        {/* Hand (glove) */}
-        <mesh position={[0.3, -0.8, -0.6]}>
-          <sphereGeometry args={[0.12, 16, 16]} />
+        {/* Hand (white glove) */}
+        <mesh position={[0.2, -0.45, -1.2]}>
+          <sphereGeometry args={[0.14, 16, 16]} />
           <meshStandardMaterial color="#f5f5f5" roughness={0.9} />
         </mesh>
       </group>
 
       {/* Sleigh front edge */}
-      <mesh position={[0, -1.1, 0.2]}>
-        <boxGeometry args={[2.2, 0.15, 0.4]} />
+      <mesh position={[0, -1.5, 0.5]}>
+        <boxGeometry args={[3, 0.2, 0.5]} />
         <meshStandardMaterial color="#8B0000" roughness={0.6} />
       </mesh>
       {/* Gold trim on sleigh */}
-      <mesh position={[0, -1.05, 0.42]}>
-        <boxGeometry args={[2.3, 0.08, 0.05]} />
+      <mesh position={[0, -1.42, 0.76]}>
+        <boxGeometry args={[3.1, 0.1, 0.08]} />
         <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.1} />
       </mesh>
 
-      {/* Sleigh side curves */}
-      <mesh position={[-1.0, -1.0, 0.1]} rotation={[0, 0.3, 0]}>
-        <boxGeometry args={[0.15, 0.3, 0.8]} />
+      {/* Sleigh side walls */}
+      <mesh position={[-1.4, -1.2, 0.8]} rotation={[0, 0.2, 0]}>
+        <boxGeometry args={[0.2, 0.8, 1.2]} />
         <meshStandardMaterial color="#8B0000" roughness={0.6} />
       </mesh>
-      <mesh position={[1.0, -1.0, 0.1]} rotation={[0, -0.3, 0]}>
-        <boxGeometry args={[0.15, 0.3, 0.8]} />
+      <mesh position={[1.4, -1.2, 0.8]} rotation={[0, -0.2, 0]}>
+        <boxGeometry args={[0.2, 0.8, 1.2]} />
         <meshStandardMaterial color="#8B0000" roughness={0.6} />
       </mesh>
     </group>
