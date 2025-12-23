@@ -108,16 +108,6 @@ function App() {
       {/* Letter popup */}
       <Letter isOpen={letterOpen} onClose={handleCloseLetter} />
 
-      {/* Manual trigger for desktop/testing */}
-      {!letterOpen && (
-        <button
-          className="manual-trigger"
-          onClick={handleShake}
-          aria-label="Open letter"
-        >
-          탭해서 열기
-        </button>
-      )}
     </div>
   );
 }

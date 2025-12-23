@@ -31,9 +31,9 @@ const Snow = ({ count = 200, shakeIntensity = 0 }) => {
       sizes[i] = Math.random() * 0.05 + 0.02;
 
       vels.push({
-        x: (Math.random() - 0.5) * 0.01,
-        y: -Math.random() * 0.01 - 0.005,
-        z: (Math.random() - 0.5) * 0.01
+        x: (Math.random() - 0.5) * 0.002,
+        y: -Math.random() * 0.003 - 0.001,
+        z: (Math.random() - 0.5) * 0.002
       });
     }
 
@@ -50,10 +50,10 @@ const Snow = ({ count = 200, shakeIntensity = 0 }) => {
     for (let i = 0; i < count; i++) {
       const i3 = i * 3;
 
-      // Add shake effect
-      posArray[i3] += velocities.current[i].x + (Math.random() - 0.5) * shake * 0.1;
+      // Add shake effect (gentler movement)
+      posArray[i3] += velocities.current[i].x + (Math.random() - 0.5) * shake * 0.03;
       posArray[i3 + 1] += velocities.current[i].y;
-      posArray[i3 + 2] += velocities.current[i].z + (Math.random() - 0.5) * shake * 0.1;
+      posArray[i3 + 2] += velocities.current[i].z + (Math.random() - 0.5) * shake * 0.03;
 
       // Check bounds (keep inside globe)
       const x = posArray[i3];
