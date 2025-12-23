@@ -5,12 +5,15 @@ import '../styles/falling-letter.css';
 const FallingLetter = ({ isVisible, onComplete }) => {
   const envelopeRef = useRef();
   const letterRef = useRef();
+  const letterPaperRef = useRef();
   const [letterOpen, setLetterOpen] = useState(false);
+  const [showFullLetter, setShowFullLetter] = useState(false);
 
   useEffect(() => {
     if (isVisible && envelopeRef.current) {
       // Reset state
       setLetterOpen(false);
+      setShowFullLetter(false);
 
       // Gentle floating down animation (like a feather)
       gsap.fromTo(envelopeRef.current,
@@ -60,10 +63,36 @@ const FallingLetter = ({ isVisible, onComplete }) => {
     }
   }, [isVisible]);
 
+  // Animate letter sliding out of envelope
+  useEffect(() => {
+    if (letterOpen && letterPaperRef.current && !showFullLetter) {
+      // Letter slides up out of envelope
+      gsap.fromTo(letterPaperRef.current,
+        {
+          y: 50,
+          opacity: 0,
+          scale: 0.9,
+          rotationX: -30
+        },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          rotationX: 0,
+          duration: 0.8,
+          ease: "back.out(1.2)",
+          onComplete: () => {
+            setShowFullLetter(true);
+          }
+        }
+      );
+    }
+  }, [letterOpen, showFullLetter]);
+
   const handleOpenLetter = () => {
     if (!letterOpen) {
       setLetterOpen(true);
-    } else {
+    } else if (showFullLetter) {
       onComplete?.();
     }
   };
@@ -87,43 +116,45 @@ const FallingLetter = ({ isVisible, onComplete }) => {
             <p className="tap-hint">탭해서 열기</p>
           </div>
         ) : (
-          // Opened letter
-          <div className="letter-opened" ref={letterRef}>
-            <div className="letter-paper">
-              <div className="letter-header">
-                <span className="snowflake">❄</span>
-                <h1>Merry Christmas</h1>
-                <span className="snowflake">❄</span>
-              </div>
+          // Letter coming out of envelope
+          <div className="letter-opening" ref={letterRef}>
+            {/* Envelope behind (opened) */}
+            <div className="envelope-opened">
+              <div className="envelope-back"></div>
+              <div className="envelope-flap-open"></div>
+            </div>
 
-              <div className="letter-body">
-                <p className="greeting">
-                  올 한 해<br />
-                  당신의 따스한 온기 덕분에<br />
-                  행복했습니다.
-                </p>
-
-                <p className="wish">
-                  따뜻하고 포근한<br />
-                  연말 되세요.
-                </p>
-
-                <div className="letter-image">
-                  <img
-                    src="https://images.unsplash.com/photo-1543589077-47d81606c1bf?q=80&w=600&auto=format&fit=crop"
-                    alt="Cozy Winter"
-                  />
+            {/* Letter paper sliding out */}
+            <div className="letter-paper-wrapper" ref={letterPaperRef}>
+              <div className="letter-paper">
+                <div className="letter-header">
+                  <span className="snowflake">❄</span>
+                  <h1>Merry Christmas</h1>
+                  <span className="snowflake">❄</span>
                 </div>
 
-                <p className="signature">
-                  - 당신을 응원하는 산타 🎅 -
-                </p>
-              </div>
+                <div className="letter-body">
+                  <p className="greeting">
+                    올 한 해<br />
+                    당신의 따스한 온기 덕분에<br />
+                    행복했습니다.
+                  </p>
 
-              <div className="letter-footer">
-                <span>✨</span>
-                <span>🎄</span>
-                <span>✨</span>
+                  <p className="wish">
+                    따뜻하고 포근한<br />
+                    연말 되세요.
+                  </p>
+
+                  <p className="signature">
+                    - 당신을 응원하는 산타 🎅 -
+                  </p>
+                </div>
+
+                <div className="letter-footer">
+                  <span>✨</span>
+                  <span>🎄</span>
+                  <span>✨</span>
+                </div>
               </div>
             </div>
 
