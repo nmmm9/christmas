@@ -109,7 +109,7 @@ const FallingLetter = ({ isVisible, onComplete }) => {
               <div className="envelope-flap"></div>
               <div className="envelope-front"></div>
               <div className="wax-seal">
-                <span>❄</span>
+                <img src={`${import.meta.env.BASE_URL}seal-avatar.png`} alt="" className="seal-avatar" />
               </div>
             </div>
             <p className="tap-hint">탭해서 열기</p>
