@@ -353,24 +353,17 @@ const Reins = ({ isRunning }) => {
   );
 };
 
-// Santa's hands holding reins
-const SantaHands = ({ isWhipping }) => {
-  const leftHandRef = useRef();
-  const rightHandRef = useRef();
+// Santa's body, arms and hands (visible from first-person view)
+const SantaBody = ({ isWhipping }) => {
+  const leftArmRef = useRef();
+  const rightArmRef = useRef();
 
   useEffect(() => {
-    if (isWhipping && rightHandRef.current) {
+    if (isWhipping && rightArmRef.current) {
       // Whip animation
-      gsap.to(rightHandRef.current.rotation, {
-        z: -1,
-        duration: 0.15,
-        yoyo: true,
-        repeat: 1,
-        ease: "power2.out"
-      });
-      gsap.to(rightHandRef.current.position, {
-        y: 0,
-        z: 0.5,
+      gsap.to(rightArmRef.current.rotation, {
+        z: -0.8,
+        x: 0.3,
         duration: 0.15,
         yoyo: true,
         repeat: 1,
@@ -380,26 +373,97 @@ const SantaHands = ({ isWhipping }) => {
   }, [isWhipping]);
 
   return (
-    <group position={[0, -1, 0.5]}>
-      {/* Left Hand (red glove) */}
-      <mesh ref={leftHandRef} position={[-0.5, -0.3, 0]}>
-        <sphereGeometry args={[0.15, 8, 8]} />
-        <meshStandardMaterial color="#cc0000" />
+    <group position={[0, -0.5, 1.5]}>
+      {/* Santa's Coat/Chest - visible at bottom of screen */}
+      <mesh position={[0, -0.8, 0.5]}>
+        <boxGeometry args={[1.8, 1, 0.8]} />
+        <meshStandardMaterial color="#cc0000" roughness={0.8} />
       </mesh>
-      {/* Right Hand (red glove) */}
-      <mesh ref={rightHandRef} position={[0.5, -0.3, 0]}>
-        <sphereGeometry args={[0.15, 8, 8]} />
-        <meshStandardMaterial color="#cc0000" />
+
+      {/* White fur trim on coat */}
+      <mesh position={[0, -0.35, 0.55]}>
+        <boxGeometry args={[1.9, 0.15, 0.7]} />
+        <meshStandardMaterial color="#f5f5f5" roughness={1} />
       </mesh>
-      {/* Sleigh edge */}
-      <mesh position={[0, -0.5, 0.3]}>
-        <boxGeometry args={[2, 0.1, 0.3]} />
-        <meshStandardMaterial color="#8B0000" />
+
+      {/* Belt */}
+      <mesh position={[0, -0.55, 0.6]}>
+        <boxGeometry args={[1.7, 0.12, 0.65]} />
+        <meshStandardMaterial color="#1a1a1a" roughness={0.5} />
       </mesh>
-      {/* Gold trim */}
-      <mesh position={[0, -0.45, 0.35]}>
-        <boxGeometry args={[2.1, 0.03, 0.05]} />
-        <meshStandardMaterial color="#FFD700" metalness={0.8} />
+      {/* Belt buckle */}
+      <mesh position={[0, -0.55, 0.95]}>
+        <boxGeometry args={[0.2, 0.15, 0.05]} />
+        <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.1} />
+      </mesh>
+
+      {/* Left Arm */}
+      <group ref={leftArmRef} position={[-0.8, -0.3, 0.3]}>
+        {/* Upper arm */}
+        <mesh rotation={[0.3, 0, 0.4]}>
+          <capsuleGeometry args={[0.12, 0.5, 8, 16]} />
+          <meshStandardMaterial color="#cc0000" roughness={0.8} />
+        </mesh>
+        {/* Forearm */}
+        <mesh position={[-0.2, -0.4, -0.3]} rotation={[0.8, 0, 0.2]}>
+          <capsuleGeometry args={[0.1, 0.4, 8, 16]} />
+          <meshStandardMaterial color="#cc0000" roughness={0.8} />
+        </mesh>
+        {/* White cuff */}
+        <mesh position={[-0.25, -0.65, -0.5]} rotation={[0.8, 0, 0.2]}>
+          <cylinderGeometry args={[0.12, 0.12, 0.1, 16]} />
+          <meshStandardMaterial color="#f5f5f5" roughness={1} />
+        </mesh>
+        {/* Hand (glove) */}
+        <mesh position={[-0.3, -0.8, -0.6]}>
+          <sphereGeometry args={[0.12, 16, 16]} />
+          <meshStandardMaterial color="#f5f5f5" roughness={0.9} />
+        </mesh>
+      </group>
+
+      {/* Right Arm */}
+      <group ref={rightArmRef} position={[0.8, -0.3, 0.3]}>
+        {/* Upper arm */}
+        <mesh rotation={[0.3, 0, -0.4]}>
+          <capsuleGeometry args={[0.12, 0.5, 8, 16]} />
+          <meshStandardMaterial color="#cc0000" roughness={0.8} />
+        </mesh>
+        {/* Forearm */}
+        <mesh position={[0.2, -0.4, -0.3]} rotation={[0.8, 0, -0.2]}>
+          <capsuleGeometry args={[0.1, 0.4, 8, 16]} />
+          <meshStandardMaterial color="#cc0000" roughness={0.8} />
+        </mesh>
+        {/* White cuff */}
+        <mesh position={[0.25, -0.65, -0.5]} rotation={[0.8, 0, -0.2]}>
+          <cylinderGeometry args={[0.12, 0.12, 0.1, 16]} />
+          <meshStandardMaterial color="#f5f5f5" roughness={1} />
+        </mesh>
+        {/* Hand (glove) */}
+        <mesh position={[0.3, -0.8, -0.6]}>
+          <sphereGeometry args={[0.12, 16, 16]} />
+          <meshStandardMaterial color="#f5f5f5" roughness={0.9} />
+        </mesh>
+      </group>
+
+      {/* Sleigh front edge */}
+      <mesh position={[0, -1.1, 0.2]}>
+        <boxGeometry args={[2.2, 0.15, 0.4]} />
+        <meshStandardMaterial color="#8B0000" roughness={0.6} />
+      </mesh>
+      {/* Gold trim on sleigh */}
+      <mesh position={[0, -1.05, 0.42]}>
+        <boxGeometry args={[2.3, 0.08, 0.05]} />
+        <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.1} />
+      </mesh>
+
+      {/* Sleigh side curves */}
+      <mesh position={[-1.0, -1.0, 0.1]} rotation={[0, 0.3, 0]}>
+        <boxGeometry args={[0.15, 0.3, 0.8]} />
+        <meshStandardMaterial color="#8B0000" roughness={0.6} />
+      </mesh>
+      <mesh position={[1.0, -1.0, 0.1]} rotation={[0, -0.3, 0]}>
+        <boxGeometry args={[0.15, 0.3, 0.8]} />
+        <meshStandardMaterial color="#8B0000" roughness={0.6} />
       </mesh>
     </group>
   );
@@ -537,7 +601,7 @@ const Scene = ({ isRunning, isWhipping, speed, tilt }) => {
       <Reins isRunning={isRunning} />
 
       {/* Santa's hands */}
-      <SantaHands isWhipping={isWhipping} />
+      <SantaBody isWhipping={isWhipping} />
 
       {/* Whip effect */}
       <WhipEffect isWhipping={isWhipping} />

@@ -109,18 +109,6 @@ function App() {
         speed={speed}
       />
 
-      {/* Santa (User) Avatar */}
-      {!showLetter && (
-        <div className="santa-avatar-container">
-          <img
-            src={`${import.meta.env.BASE_URL}seal-avatar.png`}
-            alt="Santa"
-            className="santa-avatar"
-          />
-          <span className="santa-label">🎅 Santa</span>
-        </div>
-      )}
-
       {/* Shake hint */}
       {showHint && !showLetter && (
         <div className="shake-hint santa-hint" onClick={handleShake}>
